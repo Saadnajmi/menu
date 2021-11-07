@@ -9,13 +9,13 @@ Pod::Spec.new do |s|
   s.homepage     = package["homepage"]
   s.license      = package["license"]
   s.authors      = package["author"]
-
-  s.platforms    = { :ios => "9.0" }
   s.source       = { :git => "https://github.com/react-native-menu/menu.git", :tag => "#{s.version}" }
 
-  
-  s.source_files = "ios/**/*.{h,m,mm,swift}"
-  
+  s.ios.deployment_target = "9.0"
+  s.ios.source_files = "ios/**/*.{h,m,mm,swift}"
 
+  s.osx.deployment_target = "10.14"
+  s.osx.source_files = "macos/**/*.{h,m,mm,swift}"
+  
   s.dependency "React"
 end
