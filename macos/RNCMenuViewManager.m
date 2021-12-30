@@ -1,6 +1,8 @@
 #import <React/RCTComponent.h>
 #import <React/RCTViewManager.h>
 
+@class RNCMenuView; 
+
 @implementation RCTConvert (RNCMenuViewManager)
 
 + (NSMenuItem *)NSMenuItem:(id)json
@@ -37,6 +39,43 @@
   return menu;
 }
 
++ (NSMenuItem *)action:(id)json
+{
+	NSMenuItem *menuItem = [[NSMenuItem alloc] init];
+	
+	[menuItem setIdentifier:[RCTConvert NSString:json[@"id"]]];
+	
+	NSString *title = [RCTConvert NSString:json[@"title"]];
+	NSColor *titleColor = [RCTConvert UIColor:json[@"titleColor"]];
+	NSAttributedString *attributedTitle = [[NSAttributedString alloc]
+										   initWithString:title
+										   attributes:@{NSForegroundColorAttributeName: titleColor}];
+	[menuItem setAttributedTitle:attributedTitle];
+	
+	NSDictionary *attributes = [RCTConvert NSDictionary:@"attributes"];
+	BOOL enabled = !attributes[@"disabled"];
+	BOOL hidden = [attributes[@"hidden"] boolValue];
+	[menuItem setEnabled:enabled];
+	[menuItem setHidden:hidden];
+	
+	// TODO: Make an enum converter for state
+// [menuItem setState:nil];
+	
+	// TODO: Support SF Symbol images with a color
+//	NSImageName imageName = [RCTConvert NSString:json[@"image"]];
+//	if (@available(macOS 11.0, *)) {
+//		NSImage *image = [NSImage imageWithSystemSymbolName:imageName
+//				  accessibilityDescription:nil];
+//		[menuItem setImage:image];
+//	} else {
+//		// Fallback on earlier versions
+//		NSImage *image = [NSImage imageNamed:imageName];
+//		[menuItem setImage:image];
+//	}
+
+  return menuItem;
+}
+
 @end
 
 
@@ -53,5 +92,12 @@ RCT_EXPORT_VIEW_PROPERTY(menu, NSMenu)
 RCT_EXPORT_VIEW_PROPERTY(onItemClick, RCTBubblingEventBlock)
 
 RCT_EXPORT_VIEW_PROPERTY(onSubmenuItemClick, RCTBubblingEventBlock)
+
+//(name, type, viewClass)
+
+RCT_CUSTOM_VIEW_PROPERTY(actions, NSArray, RNCMenuView)
+{
+	NSArray *actions = [RCTConvert NSArray:json];
+}
 
 @end
